@@ -1,0 +1,8 @@
+.vscode
+CMakeFiles
+__pycache__
+hello.py
+cmake*
+mpvm
+libbase.a
+Makefile
