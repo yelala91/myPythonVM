@@ -1,4 +1,4 @@
-file(GLOB SRC_FILES "*.cpp")
-add_library(base STATIC ${SRC_FILES})
+aux_source_directory(. BASE_SRCS)
+add_library(base STATIC ${BASE_SRCS}) 
 
-target_include_directories(base PUBLIC ${PROJECT_SOURCE_DIR}/base)
+include_directories(${CMAKE_CURRENT_SOURCE_DIR})

@@ -14,8 +14,8 @@ mpvm::CodeObject* mpvm::BinaryFileParser::parse() {
     int file_size = file_stream->read_int();
     std::cout << "File size is " << file_size << " bytes "<< std::endl;
 
-    int8_t object_type = file_stream->read();
-    std::cout << object_type << std::endl;
+    u_int8_t object_type = file_stream->read();
+    // std::cout << object_type << std::endl;
     if (object_type == 0xe3) {
         CodeObject* results = get_code_object();
         std::cout << "parse OK!" << std::endl;

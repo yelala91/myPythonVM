@@ -6,3 +6,4 @@ cmake*
 mpvm
 libbase.a
 Makefile
+build

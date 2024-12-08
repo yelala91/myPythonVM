@@ -12,7 +12,7 @@
 
 #include "string.hpp"
 #include "array_list.hpp"
-#include "array_list.cpp"
+// #include "array_list.cpp"
 
 
 namespace mpvm{

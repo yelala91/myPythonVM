@@ -10,10 +10,15 @@ set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
 add_subdirectory(base)
+add_subdirectory(execution_engine)
 
 # 添加可执行文件
 add_executable(${custom_name} main.cpp)
 
-target_link_libraries(${custom_name} PRIVATE base)
+target_include_directories(${custom_name} PRIVATE 
+    $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/base>
+    $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/execution_engine/lexer>
+    $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/execution_engine/syntaxer>
+)
 
-target_include_directories(${custom_name}  PRIVATE ${PROJECT_SOURCE_DIR}/base)
+target_link_libraries(${custom_name} PRIVATE base execution_engine)
