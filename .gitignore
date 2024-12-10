@@ -7,3 +7,4 @@ mpvm
 libbase.a
 Makefile
 build
+test.py

@@ -18,25 +18,33 @@ namespace mpvm{
 
     class BufferedInputStream {
     private:
-        std::ifstream ifs;
-        char szBuffer[BUFFER_LEN];
-        unsigned short index;
+        std::ifstream _ifs;
+        char _szBuffer[BUFFER_LEN];
+        unsigned short _index;
+
+        std::streamsize _latest_read_length;
 
     public:
         BufferedInputStream(std::string filename) {
-            ifs = std::move(std::ifstream(filename, std::ios::in));
+            _ifs = std::move(std::ifstream(filename, std::ios::in));
             ifs.read(szBuffer, BUFFER_LEN * sizeof(char));
-            index = 0;
+            _index = 0;
         }
 
         char read() {
-            if (index < BUFFER_LEN) 
-                return szBuffer[index++];
+            if (_index < BUFFER_LEN) 
+                return _szBuffer[_index++];
             else {
-                index = 0;
-                ifs.read(szBuffer, BUFFER_LEN * sizeof(char));
-                return szBuffer[index++];
+                _index = 0;
+                _ifs.read(_szBuffer, BUFFER_LEN * sizeof(char));
+                _latest_read_length = _ifs.gcount();
+                return _szBuffer[_index++];
             }
+        }
+
+        bool eof() {
+            return (_ifs.eof() && _latest_read_length == BUFFER_LEN && _index == BUFFER_LEN) 
+                    || (_latest_read_length < BUFFER_LEN && _index == BUFFER_LEN)
         }
 
         int read_int() {

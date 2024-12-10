@@ -25,6 +25,7 @@ namespace mpvm{
 
         CodeObject* parse();
         CodeObject* get_code_object();
+        Object* read_obj();
     };
 }
 
