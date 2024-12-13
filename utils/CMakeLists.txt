@@ -5,3 +5,4 @@ set(MPVM_UTILS_SRC
 add_library(utils STATIC ${MPVM_UTILS_SRC}) 
 
 include_directories(${CMAKE_CURRENT_SOURCE_DIR})
+include_directories(${PROJECT_SOURCE_DIR}/object)

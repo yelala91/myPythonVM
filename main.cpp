@@ -17,7 +17,7 @@ int main(int argc, char** argv) {
 
     
 
-    mpvm::BufferedInputStream* bis = new mpvm::BufferedInputStream("../__pycache__/hello.cpython-311.pyc");
+    mpvm::BufferedInputStream* bis = new mpvm::BufferedInputStream("../__pycache__/hello.cpython-310.pyc");
 
     // std::ostringstream oss;
     // oss << ifs.rdbuf();  // 将文件内容写入 stringstream
@@ -28,7 +28,9 @@ int main(int argc, char** argv) {
     // std::vector<mpvm::Token> vec = pl.tokenize();
     // std::cout << vec;
     mpvm::BinaryFileParser parser(bis);
-    parser.parse();
+    auto rtn = parser.parse();
+
+    // std::cout << *rtn;
 
     // parser.parse();
 

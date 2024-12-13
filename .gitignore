@@ -7,4 +7,5 @@ mpvm
 libbase.a
 Makefile
 build
+test.ipynb
 test.py

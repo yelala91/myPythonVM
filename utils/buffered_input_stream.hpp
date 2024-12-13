@@ -27,7 +27,7 @@ namespace mpvm{
     public:
         BufferedInputStream(std::string filename) {
             _ifs = std::move(std::ifstream(filename, std::ios::in));
-            ifs.read(szBuffer, BUFFER_LEN * sizeof(char));
+            _ifs.read(_szBuffer, BUFFER_LEN * sizeof(char));
             _index = 0;
         }
 
@@ -44,7 +44,7 @@ namespace mpvm{
 
         bool eof() {
             return (_ifs.eof() && _latest_read_length == BUFFER_LEN && _index == BUFFER_LEN) 
-                    || (_latest_read_length < BUFFER_LEN && _index == BUFFER_LEN)
+                    || (_latest_read_length < BUFFER_LEN && _index == BUFFER_LEN);
         }
 
         int read_int() {
@@ -57,8 +57,8 @@ namespace mpvm{
         }
 
         ~BufferedInputStream() {
-            if (ifs.is_open()) {
-                ifs.close();
+            if (_ifs.is_open()) {
+                _ifs.close();
             }
         }
 

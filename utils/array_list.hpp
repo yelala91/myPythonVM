@@ -9,6 +9,8 @@
 #ifndef _ARRAY_LIST_HPP
 #define _ARRAY_LIST_HPP
 
+#include <ostream>
+
 namespace mpvm{
 
     template <typename T>

@@ -17,10 +17,23 @@ namespace mpvm{
     private:
         int _value;
 
+        std::ostream& _display(std::ostream&) const override;
+
     public:
         Integer(int x) : _value(x) {}
         inline int value() const {return _value;}
     };
 
+
+    class Long : public Object {
+    private:
+        long _value;
+
+        std::ostream& _display(std::ostream&) const override;
+
+    public:
+        Long(long x) : _value(x) {}
+        inline int value() const {return _value;}
+    };
 }
 #endif

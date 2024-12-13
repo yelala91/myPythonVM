@@ -81,3 +81,4 @@ template <typename T>
 T mpvm::ArrayList<T>::pop() {
     return _array[--_size];
 }
+

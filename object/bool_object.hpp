@@ -18,11 +18,15 @@ namespace mpvm{
     private:
         bool _value;
 
-        static BoolObject* _true_instance   = nullptr;
-        static BoolObject* _false_instance  = nullptr;
+        static BoolObject* _true_instance;   
+        static BoolObject* _false_instance;  
+
+        std::ostream& _display(std::ostream&) const override;
 
     public:
         BoolObject(bool v) : _value(v) { }
+
+        
 
         static BoolObject* get_true_instance() {
             if (_true_instance) {
@@ -40,9 +44,10 @@ namespace mpvm{
             }
         }
 
-    }
+    };
 
-    extern
+    static BoolObject* TRUE_OBJECT = BoolObject::get_true_instance();
+    static BoolObject* FALSE_OBJECT = BoolObject::get_false_instance();
 }
 
 

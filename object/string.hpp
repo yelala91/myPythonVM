@@ -18,10 +18,13 @@ namespace mpvm{
     private:
         char* _value;
         int   _length;
+        bool  _ascii;
+
+        std::ostream& _display(std::ostream&) const override;
 
     public:
-        String(const char* x);
-        String(const char* x, const int length);
+        String(const char* x, bool ascii);
+        String(const char* x, const int length, bool ascii);
 
         /* move */
         String(String&& other) noexcept : _value(other._value) {
@@ -39,6 +42,7 @@ namespace mpvm{
 
         inline const char* value() const     {return _value;}
         inline int length() const            {return _length;}
+
     };
 }
 

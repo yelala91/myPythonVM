@@ -12,6 +12,7 @@
 #include "buffered_input_stream.hpp"
 #include "code_object.hpp"
 
+
 namespace mpvm{
 
     class BinaryFileParser {
@@ -19,13 +20,21 @@ namespace mpvm{
     private:
         BufferedInputStream* file_stream;
 
+        Tuple*  _refs;
+
+        inline void _add_ref(Object*, u_int8_t);
+
     public:
 
-        BinaryFileParser(BufferedInputStream* stream) : file_stream(stream) {}
+        BinaryFileParser(BufferedInputStream* stream) : file_stream(stream) {
+            _refs = new Tuple();
+        }
 
-        CodeObject* parse();
-        CodeObject* get_code_object();
+        Object* parse();
+        
         Object* read_obj();
+
+
     };
 }
 

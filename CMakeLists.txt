@@ -23,4 +23,4 @@ target_include_directories(${custom_name} PRIVATE
     $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/compiler/syntaxer>
 )
 
-target_link_libraries(${custom_name} PRIVATE base execution_engine)
+target_link_libraries(${custom_name} PRIVATE utils object)
