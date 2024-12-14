@@ -19,6 +19,14 @@ namespace mpvm{
 
         std::ostream& _display(std::ostream&) const override;
 
+        Object* _add(Object*) const override;
+        Object* _greater(Object*) const override;
+        Object* _less(Object*) const override;
+        Object* _equal(Object*) const override;
+        Object* _not_equal(Object*) const override;
+        Object* _geq(Object*) const override;
+        Object* _leq(Object*) const override;
+
     public:
         Integer(int x) : _value(x) {}
         inline int value() const {return _value;}

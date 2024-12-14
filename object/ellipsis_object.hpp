@@ -33,7 +33,7 @@ namespace mpvm{
         
     };
 
-    static Ellipsis* ELLIPSIS_OBJECT = Ellipsis::get_instance();
+    extern Ellipsis* ELLIPSIS_OBJECT;
 
     
 }

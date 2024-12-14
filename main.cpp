@@ -30,7 +30,7 @@ int main(int argc, char** argv) {
     mpvm::BinaryFileParser parser(bis);
     auto rtn = parser.parse();
 
-    // std::cout << *rtn;
+    std::cout << *rtn;
 
     // parser.parse();
 

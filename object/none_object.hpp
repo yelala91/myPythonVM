@@ -15,12 +15,21 @@ namespace mpvm{
     class NoneObject : public Object {
 
     private:
+        static NoneObject* _instance;
         std::ostream& _display(std::ostream&) const override;
     public:
         NoneObject() {}
+        static NoneObject* get_instance() {
+            if (_instance) {
+                return _instance;
+            } else {
+                _instance = new NoneObject();
+                return _instance;
+            }
+        }
     };
 
-    static NoneObject* NONE_OBJECT = new NoneObject();
+    extern NoneObject* NONE_OBJECT;
 }
 
 #endif

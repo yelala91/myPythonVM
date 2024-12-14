@@ -46,8 +46,8 @@ namespace mpvm{
 
     };
 
-    static BoolObject* TRUE_OBJECT = BoolObject::get_true_instance();
-    static BoolObject* FALSE_OBJECT = BoolObject::get_false_instance();
+    extern BoolObject* TRUE_OBJECT;
+    extern BoolObject* FALSE_OBJECT;
 }
 
 

@@ -59,3 +59,4 @@ std::ostream& mpvm::CodeObject::_display(std::ostream& os) const {
     return os;
 
 }
+
