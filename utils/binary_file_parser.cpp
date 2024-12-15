@@ -190,7 +190,7 @@ mpvm::Object* mpvm::BinaryFileParser::read_obj() {
         for(size_t i = 0; i < n; i++)
             temp_str[i] = file_stream->read();
         
-        rtnval = new String(temp_str, true);
+        rtnval = new String(temp_str, n, true);
         _add_ref(rtnval, flag);
 
         delete[] temp_str;

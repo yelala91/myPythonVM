@@ -11,13 +11,17 @@
 
 #include <stack>
 #include "code_object.hpp"
+#include <unordered_map>
 
 namespace mpvm {
     class Interpreter {
 
     private:
 
-        std::stack<Object*> _stack;
+        std::stack<Object*>* _stack;
+        Tuple* _consts;
+        Tuple* _names;
+        std::unordered_map<std::string, Object*>* _names_hash;
 
     public:
         

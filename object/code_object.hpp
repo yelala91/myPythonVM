@@ -18,6 +18,8 @@
 
 namespace mpvm{
 
+    class Interpreter;
+
     class CodeObject : public Object {
 
     private:
@@ -101,6 +103,8 @@ namespace mpvm{
             int         firstlineno,
             String*     notable
         );
+
+        friend class Interpreter;
 
     };
 }

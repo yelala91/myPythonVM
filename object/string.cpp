@@ -6,19 +6,20 @@
 
 mpvm::String::String(const char* x, bool ascii) : _ascii(ascii){
     _length = strlen(x);
-    _value = new char[_length];
+    _value = std::move(std::string(x, _length));
 
-    strcpy(_value, x);
+    // strcpy(_value, x);
 }
 
 mpvm::String::String(const char* x, const int length, bool ascii) : _ascii(ascii) {
     // _length = strlen(x);
     _length = length;
-    _value = new char[_length];
+    // _value = new char[_length];
+    _value = std::move(std::string(x, length));
 
-    for (int i = 0; i < length; i++) {
-        _value[i] = x[i];
-    }
+    // for (int i = 0; i < length; i++) {
+    //     _value[i] = x[i];
+    // }
 }
 
 std::ostream& mpvm::String::_display(std::ostream& os) const {

@@ -9,3 +9,5 @@ Makefile
 build
 test.ipynb
 test.py
+test_demo
+test.sh

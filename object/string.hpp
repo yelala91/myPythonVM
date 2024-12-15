@@ -11,12 +11,14 @@
 #define _STRING_HPP
 
 #include "object.hpp"
+#include <string>
 
 namespace mpvm{
 
     class String : public Object {
     private:
-        char* _value;
+        // char* _value;
+        std::string _value;
         int   _length;
         bool  _ascii;
 
@@ -27,20 +29,21 @@ namespace mpvm{
         String(const char* x, const int length, bool ascii);
 
         /* move */
-        String(String&& other) noexcept : _value(other._value) {
-            other._value = nullptr; 
+        String(String&& other) noexcept : _value(std::move(other._value)) {
+            // other._value = nullptr; 
         }
 
         String& operator=(String&& other) noexcept {
-            if (this != &other) {
-                delete[] _value; 
-                _value = other._value; 
-                other._value = nullptr;
-            }
+            // if (this != &other) {
+            //     delete[] _value; 
+            //     _value = other._value; 
+            //     other._value = nullptr;
+            // }
+            _value = std::move(other._value);
             return *this;
         }
 
-        inline const char* value() const     {return _value;}
+        inline std::string value() const     {return _value;}
         inline int length() const            {return _length;}
 
     };

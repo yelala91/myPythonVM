@@ -27,9 +27,13 @@ namespace mpvm{
         Object* get(int index) const {
             return _list[index];
         }
+
+        
         int size() const {
             return _list.size();
         }
+
+        Object* operator[](int) const;
     };
 }
 

@@ -1,6 +1,6 @@
 #include "buffered_input_stream.hpp"
 #include "binary_file_parser.hpp" 
-#include "python_lexer.hpp"
+#include "interpreter.hpp"
 
 
 #include <fstream>
@@ -17,7 +17,7 @@ int main(int argc, char** argv) {
 
     
 
-    mpvm::BufferedInputStream* bis = new mpvm::BufferedInputStream("../__pycache__/hello.cpython-310.pyc");
+    mpvm::BufferedInputStream* bis = new mpvm::BufferedInputStream("../test_demo/__pycache__/test_while.cpython-310.pyc");
 
     // std::ostringstream oss;
     // oss << ifs.rdbuf();  // 将文件内容写入 stringstream
@@ -30,7 +30,13 @@ int main(int argc, char** argv) {
     mpvm::BinaryFileParser parser(bis);
     auto rtn = parser.parse();
 
-    std::cout << *rtn;
+    std::cout << *rtn << std::endl;
+
+    mpvm::Interpreter interpreter;
+
+    std::cout << "========== Start Run Code Object ==========" << std::endl;
+
+    interpreter.run(static_cast<mpvm::CodeObject*>(rtn));
 
     // parser.parse();
 

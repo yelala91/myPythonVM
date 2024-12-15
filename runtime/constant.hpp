@@ -62,7 +62,7 @@ namespace mpvm {
          inline constexpr unsigned char INPLACE_POWER = 67;
          inline constexpr unsigned char GET_ITER = 68;
          inline constexpr unsigned char GET_YIELD_FROM_ITER = 69;
-         inline constexpr unsigned char PRunsigned char_EXPR = 70;
+         inline constexpr unsigned char PRINT_EXPR = 70;
          inline constexpr unsigned char LOAD_BUILD_CLASS = 71;
          inline constexpr unsigned char YIELD_FROM = 72;
          inline constexpr unsigned char GET_AWAITABLE = 73;
@@ -144,8 +144,17 @@ namespace mpvm {
          inline constexpr unsigned char DICT_UPDATE = 165;
     }
 
+    namespace compare_op {
+        inline constexpr unsigned char LESS = 0;
+        inline constexpr unsigned char LESS_EQUAL = 1;
+        inline constexpr unsigned char EQUAL = 2;
+        inline constexpr unsigned char NOT_EQUAL = 3;
+        inline constexpr unsigned char GREATER = 4;
+        inline constexpr unsigned char GREATER_EQUAL = 5;
+    }
+
     namespace builtin{
-        extern std::unordered_map<std::string, std::function> builtin_functions;
+        // extern std::unordered_map<std::string, std::function<Object*()>> builtin_functions;
     }
 
 }

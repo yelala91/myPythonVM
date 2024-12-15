@@ -12,6 +12,7 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 add_subdirectory(utils)
 add_subdirectory(object)
 add_subdirectory(compiler)
+add_subdirectory(runtime)
 
 # 添加可执行文件
 add_executable(${custom_name} main.cpp)
@@ -19,8 +20,7 @@ add_executable(${custom_name} main.cpp)
 target_include_directories(${custom_name} PRIVATE 
     $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/utils>
     $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/object>
-    $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/compiler/lexer>
-    $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/compiler/syntaxer>
+    $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/runtime>
 )
 
-target_link_libraries(${custom_name} PRIVATE utils object)
+target_link_libraries(${custom_name} PRIVATE utils object runtime)
