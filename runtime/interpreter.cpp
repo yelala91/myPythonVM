@@ -74,7 +74,7 @@ void mpvm::Interpreter::run(mpvm::CodeObject* co) {
             case op_code::BINARY_ADD:
                 obj1 = _stack->top(); _stack->pop();
                 obj2 = _stack->top(); _stack->pop();
-                _stack->push(obj1->operator+(obj2));
+                _stack->push(mpvm::add(obj1, obj2));
 
 #ifdef DEBUG
     std::cout << op_line <<  "\t\t\t binary add: " << *obj1 << " + " << *obj2 << " = " << *(_stack->top()) << std::endl;
@@ -87,7 +87,7 @@ void mpvm::Interpreter::run(mpvm::CodeObject* co) {
                 obj2 = _stack->top(); _stack->pop();
                 obj1 = _stack->top(); _stack->pop();
 
-                _stack->push(obj1->operator+(obj2));
+                _stack->push(mpvm::add(obj1, obj2));
 
 #ifdef DEBUG
     std::cout << op_line <<  "\t\t\t inplace add: " << *obj1 << " + " << *obj2 << " = " << *_stack->top() << std::endl;
@@ -102,25 +102,25 @@ void mpvm::Interpreter::run(mpvm::CodeObject* co) {
 
                 switch(work_num) {
                     case compare_op::LESS:
-                        _stack->push(obj1->operator<(obj2));
+                        _stack->push(mpvm::less(obj1, obj2));
                         break;
                     
                     case compare_op::GREATER:
-                        _stack->push(obj1->operator>(obj2));
+                        _stack->push(mpvm::greater(obj1, obj2));
                         break;
                     
                     case compare_op::EQUAL:
-                        _stack->push(obj1->operator==(obj2));
+                        _stack->push(mpvm::equal(obj1, obj2));
                         break;
 
                     case compare_op::NOT_EQUAL:
-                        _stack->push(obj1->operator!=(obj2));
+                        _stack->push(mpvm::not_equal(obj1, obj2));
                         break;
                     case compare_op::GREATER_EQUAL:
-                        _stack->push(obj1->operator>=(obj2));
+                        _stack->push(mpvm::geq(obj1, obj2));
                         break;
                     case compare_op::LESS_EQUAL:
-                        _stack->push(obj1->operator<=(obj2));
+                        _stack->push(mpvm::leq(obj1, obj2));
                         break;
 
                     default:

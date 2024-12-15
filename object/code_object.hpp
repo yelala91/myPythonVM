@@ -12,11 +12,27 @@
 
 #include "string.hpp"
 #include "tuple_object.hpp"
-
+#include "object.hpp"
 // #include "array_list.cpp"
 
 
+
 namespace mpvm{
+
+    class CodeKlass : public Klass {
+    
+    private:
+        CodeKlass() : Klass("code") { }
+        static CodeKlass* _instance;
+        
+
+    public:
+        static CodeKlass* get_instance();
+        void _display(std::ostream&, Object*) const override;
+    };
+
+    extern CodeKlass* CODE_KLASS;
+
 
     class Interpreter;
 
@@ -41,11 +57,11 @@ namespace mpvm{
         int             _firstlineno;
         String*         _notable;
 
-        std::ostream& _display(std::ostream&) const override;
-
 
     public:
-        CodeObject() {}
+        CodeObject() {
+            set_klass(CODE_KLASS);
+        }
         CodeObject(
             int         argcount, 
             int         posonlyargcount,
@@ -105,8 +121,10 @@ namespace mpvm{
         );
 
         friend class Interpreter;
+        friend class CodeKlass;
 
     };
+
 }
 
 #endif

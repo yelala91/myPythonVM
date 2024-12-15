@@ -71,6 +71,7 @@ mpvm::Object* mpvm::BinaryFileParser::parse() {
 
     int file_size = file_stream->read_int();
     std::cout << "File size is " << file_size << " bytes "<< std::endl;
+    
     return read_obj();
 }
 

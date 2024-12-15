@@ -2,72 +2,109 @@
 #include "integer.hpp"
 #include "bool_object.hpp"
 
-std::ostream& mpvm::Integer::_display(std::ostream& os) const {
-    os << _value;
-    return os;
+void mpvm::IntegerKlass::_display(std::ostream& os, Object* obj) const {
+    mpvm::Integer* iobj = static_cast<mpvm::Integer*>(obj);
+
+    os << iobj->value();
 }
 
-std::ostream& mpvm::Long::_display(std::ostream& os) const {
-    os << _value;
-    return os;
+mpvm::Object* mpvm::IntegerKlass::_add(Object* x, Object* y) const {
+    mpvm::Integer* ix = static_cast<mpvm::Integer*>(x);
+    mpvm::Integer* iy = static_cast<mpvm::Integer*>(y);
+
+    return new Integer(ix->value() + iy->value());
 }
 
-mpvm::Object* mpvm::Integer::_add(Object* other) const {
-    mpvm::Integer* temp_int = static_cast<mpvm::Integer*>(other);
-
-    return new mpvm::Integer(_value + temp_int->_value);
+mpvm::Object* mpvm::IntegerKlass::_sub(Object* x, Object* y) const {
+    mpvm::Integer* ix = static_cast<mpvm::Integer*>(x);
+    mpvm::Integer* iy = static_cast<mpvm::Integer*>(y);
+    return new Integer(ix->value() - iy->value());
 }
 
-mpvm::Object* mpvm::Integer::_greater(Object* other) const {
-    mpvm::Integer* temp_int = static_cast<mpvm::Integer*>(other);
+mpvm::Object* mpvm::IntegerKlass::_mul(Object* x, Object* y) const {
+    mpvm::Integer* ix = static_cast<mpvm::Integer*>(x);
+    mpvm::Integer* iy = static_cast<mpvm::Integer*>(y);
+    return new Integer(ix->value() * iy->value());
+}
+
+mpvm::Object* mpvm::IntegerKlass::_div(Object* x, Object* y) const {
+    mpvm::Integer* ix = static_cast<mpvm::Integer*>(x);
+    mpvm::Integer* iy = static_cast<mpvm::Integer*>(y);
+    return new Integer(ix->value() / iy->value());
+}
+
+mpvm::Object* mpvm::IntegerKlass::_mod(Object* x, Object* y) const {
+    mpvm::Integer* ix = static_cast<mpvm::Integer*>(x);
+    mpvm::Integer* iy = static_cast<mpvm::Integer*>(y);
+    return new Integer(ix->value() % iy->value());
+}
+
+mpvm::Object* mpvm::IntegerKlass::_greater(Object* x, Object* y) const {
+    mpvm::Integer* ix = static_cast<mpvm::Integer*>(x);
+    mpvm::Integer* iy = static_cast<mpvm::Integer*>(y);
+    if (ix->value() > iy->value()) {
+        return mpvm::TRUE_OBJECT;
+    } else {
+        return mpvm::FALSE_OBJECT;
+    }
+}
+
+mpvm::Object* mpvm::IntegerKlass::_less(Object* x, Object* y) const {
+    mpvm::Integer* ix = static_cast<mpvm::Integer*>(x);
+    mpvm::Integer* iy = static_cast<mpvm::Integer*>(y);
     
-    if (_value > temp_int->_value) {
+    if (ix->value() < iy->value()) {
         return mpvm::TRUE_OBJECT;
     } else {
         return mpvm::FALSE_OBJECT;
     }
 }
 
-mpvm::Object* mpvm::Integer::_less(Object* other) const {
-    mpvm::Integer* temp_int = static_cast<mpvm::Integer*>(other);
-    if (_value < temp_int->_value) {
+mpvm::Object* mpvm::IntegerKlass::_equal(Object* x, Object* y) const {
+    mpvm::Integer* ix = static_cast<mpvm::Integer*>(x);
+    mpvm::Integer* iy = static_cast<mpvm::Integer*>(y);
+    
+    if (ix->value() == iy->value()) {
         return mpvm::TRUE_OBJECT;
     } else {
         return mpvm::FALSE_OBJECT;
     }
 }
 
-mpvm::Object* mpvm::Integer::_equal(Object* other) const {
-    mpvm::Integer* temp_int = static_cast<mpvm::Integer*>(other);
-    if (_value == temp_int->_value) {
+mpvm::Object* mpvm::IntegerKlass::_not_equal(Object* x, Object* y) const {
+    mpvm::Integer* ix = static_cast<mpvm::Integer*>(x);
+    mpvm::Integer* iy = static_cast<mpvm::Integer*>(y);
+    if (ix->value() != iy->value()) {
         return mpvm::TRUE_OBJECT;
     } else {
         return mpvm::FALSE_OBJECT;
     }
 }
 
-mpvm::Object* mpvm::Integer::_not_equal(Object* other) const {
-    mpvm::Integer* temp_int = static_cast<mpvm::Integer*>(other);
-    if (_value != temp_int->_value) {
+mpvm::Object* mpvm::IntegerKlass::_geq(Object* x, Object* y) const {
+    mpvm::Integer* ix = static_cast<mpvm::Integer*>(x);
+    mpvm::Integer* iy = static_cast<mpvm::Integer*>(y);
+    if (ix->value() >= iy->value()) {
+        return mpvm::TRUE_OBJECT;
+    } else {
+        return mpvm::FALSE_OBJECT;
+    }
+}
+mpvm::Object* mpvm::IntegerKlass::_leq(Object* x, Object* y) const {
+    mpvm::Integer* ix = static_cast<mpvm::Integer*>(x);
+    mpvm::Integer* iy = static_cast<mpvm::Integer*>(y);
+    if (ix->value() <= iy->value()) {
         return mpvm::TRUE_OBJECT;
     } else {
         return mpvm::FALSE_OBJECT;
     }
 }
 
-mpvm::Object* mpvm::Integer::_geq(Object* other) const {
-    mpvm::Integer* temp_int = static_cast<mpvm::Integer*>(other);
-    if (_value >= temp_int->_value) {
-        return mpvm::TRUE_OBJECT;
-    } else {
-        return mpvm::FALSE_OBJECT;
+mpvm::IntegerKlass* mpvm::IntegerKlass::_instance = nullptr;
+
+mpvm::IntegerKlass* mpvm::IntegerKlass::get_instance() {
+    if (_instance == nullptr) {
+        _instance = new IntegerKlass();
     }
-}
-mpvm::Object* mpvm::Integer::_leq(Object* other) const {
-    mpvm::Integer* temp_int = static_cast<mpvm::Integer*>(other);
-    if (_value <= temp_int->_value) {
-        return mpvm::TRUE_OBJECT;
-    } else {
-        return mpvm::FALSE_OBJECT;
-    }
+    return _instance;
 }

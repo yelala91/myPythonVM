@@ -13,6 +13,19 @@
 
 namespace mpvm{
 
+    class BoolKlass : public Klass {
+    private:
+        BoolKlass() : Klass("bool") { }
+        static BoolKlass* _instance;
+        
+    public:
+        
+        static BoolKlass* get_instance();
+        void _display(std::ostream&, Object*) const override;
+    };
+
+    extern BoolKlass* BOOL_KLASS;
+
     class BoolObject : public Object {
     
     private:
@@ -21,33 +34,33 @@ namespace mpvm{
         static BoolObject* _true_instance;   
         static BoolObject* _false_instance;  
 
-        std::ostream& _display(std::ostream&) const override;
-
     public:
-        BoolObject(bool v) : _value(v) { }
-
-        
+        BoolObject(bool v) : _value(v) { 
+            set_klass(BOOL_KLASS);
+        }
 
         static BoolObject* get_true_instance() {
-            if (_true_instance) {
-                return _true_instance;
-            } else {
-                return new BoolObject(true);
-            }
+            if (!_true_instance) {
+                _true_instance = new BoolObject(true);
+            } 
+            
+            return _true_instance;
         }
 
         static BoolObject* get_false_instance() {
-            if (_false_instance) {
-                return _false_instance;
-            } else {
-                return new BoolObject(false);
+            if (!_false_instance) {
+                _false_instance = new BoolObject(false);
             }
+
+            return _false_instance;
         }
 
     };
 
     extern BoolObject* TRUE_OBJECT;
     extern BoolObject* FALSE_OBJECT;
+
+
 }
 
 

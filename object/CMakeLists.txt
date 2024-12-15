@@ -11,5 +11,8 @@ set(MPVM_OBJECT_SRC
 )
 add_library(object STATIC ${MPVM_OBJECT_SRC}) 
 
+# add_subdirectory(klass)
+
 include_directories(${CMAKE_CURRENT_SOURCE_DIR})
 include_directories(${PROJECT_SOURCE_DIR}/utils)
+

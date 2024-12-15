@@ -37,26 +37,33 @@ void mpvm::CodeObject::set(
     _notable = notable;
 }
 
-std::ostream& mpvm::CodeObject::_display(std::ostream& os) const {
+mpvm::CodeKlass* mpvm::CodeKlass::_instance = nullptr;
+
+void mpvm::CodeKlass::_display(std::ostream& os, Object* obj) const {
+    mpvm::CodeObject* code_obj = static_cast<mpvm::CodeObject*>(obj);
+
     os << "========== CodeObject ==========" << std::endl;
-    os << "argcount: " << _argcount << std::endl;
-    os << "posonlyargcount: " << _posonlyargcount << std::endl;
-    os << "kwonlyargcount: " << _kwonlyargcount << std::endl;
-    os << "nlocals: " << _nlocals << std::endl;
-    os << "stacksize: " << _stacksize << std::endl;
-    os << "flags: " << _flags << std::endl;
-    os << "bytecodes: " << *_bytecodes << std::endl;
-    os << "consts: " << *_consts << std::endl;
-    os << "names: " << *_names << std::endl;
-    os << "varnames: " << *_varnames << std::endl;
-    os << "freenames: " << *_freenames << std::endl;
-    os << "cellvars: " << *_cellvars << std::endl;
-    os << "filename: " << *_filename << std::endl;
-    os << "co_name: " << *_co_name << std::endl;
-    os << "firstlineno: " << _firstlineno << std::endl;
-    os << "notable: " << *_notable << std::endl;
-
-    return os;
-
+    os << "argcount: "          << code_obj->_argcount << std::endl;
+    os << "posonlyargcount: "   << code_obj->_posonlyargcount << std::endl;
+    os << "kwonlyargcount: "    << code_obj->_kwonlyargcount << std::endl;
+    os << "nlocals: "           << code_obj->_nlocals << std::endl;
+    os << "stacksize: "         << code_obj->_stacksize << std::endl;
+    os << "flags: "             << code_obj->_flags << std::endl;
+    os << "bytecodes: "         << *code_obj->_bytecodes << std::endl;
+    os << "consts: "            << *code_obj->_consts << std::endl;
+    os << "names: "             << *code_obj->_names << std::endl;
+    os << "varnames: "          << *code_obj->_varnames << std::endl;
+    os << "freenames: "         << *code_obj->_freenames << std::endl;
+    os << "cellvars: "          << *code_obj->_cellvars << std::endl;
+    os << "filename: "          << *code_obj->_filename << std::endl;
+    os << "co_name: "           << *code_obj->_co_name << std::endl;
+    os << "firstlineno: "       << code_obj->_firstlineno << std::endl;
+    os << "notable: "           << *code_obj->_notable << std::endl;
 }
 
+mpvm::CodeKlass* mpvm::CodeKlass::get_instance() {
+    if (_instance == nullptr) {
+        _instance = new CodeKlass();
+    }
+    return _instance;
+}

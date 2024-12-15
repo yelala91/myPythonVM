@@ -14,12 +14,25 @@
 
 namespace mpvm{
 
+    class EllipsisKlass : public Klass {
+    private:
+        EllipsisKlass() : Klass("ellipsis") { }
+        static EllipsisKlass* _instance;
+       
+    public:
+        static EllipsisKlass* get_instance();
+        void _display(std::ostream&, Object*) const override;
+    };
+
+    extern EllipsisKlass* ELLIPSIS_KLASS;
+
     class Ellipsis : public Object {
     
     private:
         static Ellipsis* _instance;
-
-        std::ostream& _display(std::ostream&) const override;
+        Ellipsis() {
+            set_klass(ELLIPSIS_KLASS);
+        }
 
     public:
         static Ellipsis* get_instance() {
@@ -34,6 +47,7 @@ namespace mpvm{
     };
 
     extern Ellipsis* ELLIPSIS_OBJECT;
+
 
     
 }
