@@ -9,23 +9,23 @@
 #ifndef INTERPRETER_HPP
 #define INTERPRETER_HPP
 
-#include <stack>
-#include "code_object.hpp"
-#include <unordered_map>
+#include "frame_object.hpp"
 
 namespace mpvm {
     class Interpreter {
 
     private:
 
-        std::stack<Object*>* _stack;
-        Tuple* _consts;
-        Tuple* _names;
-        std::unordered_map<std::string, Object*>* _names_hash;
+        FrameObject* _frame;
+        Object* _ret_val;
 
     public:
         
         void run(CodeObject* co);
+        void build_frame(Object* callable);
+        void eval_frame();
+        void destroy_frame();
+        void leave_frame();
         
     };
 }

@@ -1,192 +1,247 @@
 #include "interpreter.hpp"
 #include "constant.hpp"
 #include "bool_object.hpp"
+#include "function_object.hpp"
 #include <iostream>
 
-// #define DEBUG
+#define DEBUG
 
-void mpvm::Interpreter::run(mpvm::CodeObject* co) {
+#define PUSH(x)     _frame->stack()->push((x))
+#define POP()       _frame->stack()->pop()
+#define TOP()       _frame->stack()->top()
 
+void mpvm::Interpreter::build_frame(Object* callable) {
+    FrameObject* frame = new FrameObject(static_cast<FunctionObject*>(callable));
+    frame->set_sender(_frame);
+    _frame = frame;
+
+}
+
+void mpvm::Interpreter::destroy_frame() {
+    FrameObject* frame = _frame;
+    _frame = _frame->sender();
+    delete frame;
+}
+
+void mpvm::Interpreter::leave_frame() {
+    destroy_frame();
+    PUSH(_ret_val);
+}
+
+void mpvm::Interpreter::eval_frame() {
     using namespace mpvm;
 
 #ifdef DEBUG
     int op_line = 1;
 #endif
     
-    
-    _stack = new std::stack<mpvm::Object*>();
-    _consts = co->_consts;
-    _names = co->_names;
-
-    _names_hash = new std::unordered_map<std::string, mpvm::Object*>();
-
-    int num_op_codes = co->_bytecodes->length();
-
-    unsigned int op_code, work_num;
-    String *name, *func;
+    unsigned int ope, op_arg;
     Object *obj1, *obj2, *obj;
-    int c_idx = 0;
+    String* func;
 
-    while (c_idx < num_op_codes) {
-        op_code = co->_bytecodes->value()[c_idx++] & 0xff;
-        work_num = co->_bytecodes->value()[c_idx++] & 0xff;
+    while (_frame->has_more_code()) {
+        ope = _frame->next_opcode();
+        op_arg = _frame->next_op_arg();
         
-        switch(op_code) {
+        switch(ope) {
             case op_code::LOAD_CONST:
-                _stack->push((*_consts)[work_num]);
+                _frame->load_const(op_arg);
+                // _stack->push((*_consts)[op_arg]);
 
 #ifdef DEBUG
-    std::cout << op_line << "\t\t\tload const: " << *((*_consts)[work_num]) << std::endl;
+    std::cout << op_line << "\t\t\tload const: " << op_arg << std::endl;
 #endif
 
                 break;
 
             case op_code::LOAD_NAME:
-                name = static_cast<String*>((*_names)[work_num]);
 
-                if (_names_hash->find(name->value()) == _names_hash->end()) {
-                    _stack->push(name);
-                } else {
-                    _stack->push(_names_hash->find(name->value())->second);
-                }
+                _frame->load_global(op_arg);
+                // name = static_cast<String*>((*_names)[op_arg]);
+
+                // if (_names_hash->find(name->value()) == _names_hash->end()) {
+                //     _stack->push(name);
+                // } else {
+                //     _stack->push(_names_hash->find(name->value())->second);
+                // }
                 
 #ifdef DEBUG
-    std::cout << op_line <<  "\t\t\tload name: " << *name << " = " << *(_stack->top()) << std::endl;
+    std::cout << op_line <<  "\t\t\tload name: " << op_arg << std::endl;
 #endif
 
                 break;
 
             case op_code::STORE_NAME:
-                name = static_cast<String*>((*_names)[work_num]); 
-                if (_names_hash->find(name->value()) == _names_hash->end()) {
-                    _names_hash->insert({name->value(), _stack->top()});
-                } else {
-                    (*_names_hash)[name->value()] = _stack->top();
-                }
+                obj = _frame->names()->get(op_arg);
+                _frame->store_global(obj, TOP());   
+
+                POP();
+
+                // name = static_cast<String*>((*_names)[op_arg]); 
+                // if (_names_hash->find(name->value()) == _names_hash->end()) {
+                //     _names_hash->insert({name->value(), _stack->top()});
+                // } else {
+                //     (*_names_hash)[name->value()] = _stack->top();
+                // }
                 
-                _stack->pop();
+                // _stack->pop();
 
 #ifdef DEBUG
-    std::cout << op_line << "\t\t\tstore name: " << name->value() << " = " << *(*_names_hash)[name->value()] << std::endl;
+    std::cout << op_line << "\t\t\tstore name: " << op_arg << std::endl;
 #endif
                 break;
                 
             case op_code::BINARY_ADD:
-                obj1 = _stack->top(); _stack->pop();
-                obj2 = _stack->top(); _stack->pop();
-                _stack->push(mpvm::add(obj1, obj2));
+                obj2 = TOP();   POP();
+                obj1 = TOP();   POP();
+
+                PUSH(mpvm::add(obj1, obj2));
+                // obj1 = _stack->top(); _stack->pop();
+                // obj2 = _stack->top(); _stack->pop();
+                // _stack->push(mpvm::add(obj1, obj2));
 
 #ifdef DEBUG
-    std::cout << op_line <<  "\t\t\t binary add: " << *obj1 << " + " << *obj2 << " = " << *(_stack->top()) << std::endl;
+    std::cout << op_line <<  "\t\t\t binary add: " << op_arg << std::endl;
 #endif
                 
                 break;
 
             case op_code::INPLACE_ADD:
 
-                obj2 = _stack->top(); _stack->pop();
-                obj1 = _stack->top(); _stack->pop();
+                obj2 = TOP();   POP();
+                obj1 = TOP();   POP();
 
-                _stack->push(mpvm::add(obj1, obj2));
+                PUSH(mpvm::add(obj1, obj2));
+
+                // obj2 = _stack->top(); _stack->pop();
+                // obj1 = _stack->top(); _stack->pop();
+
+                // _stack->push(mpvm::add(obj1, obj2));
 
 #ifdef DEBUG
-    std::cout << op_line <<  "\t\t\t inplace add: " << *obj1 << " + " << *obj2 << " = " << *_stack->top() << std::endl;
+    std::cout << op_line <<  "\t\t\t inplace add: " << op_arg << std::endl;
 #endif 
 
                 break;
 
             case op_code::COMPARE_OP:
 
-                obj2 = _stack->top(); _stack->pop();
-                obj1 = _stack->top(); _stack->pop();
+                obj2 = TOP();   POP();
+                obj1 = TOP();   POP();
 
-                switch(work_num) {
+                // obj2 = _stack->top(); _stack->pop();
+                // obj1 = _stack->top(); _stack->pop();
+
+                switch(op_arg) {
                     case compare_op::LESS:
-                        _stack->push(mpvm::less(obj1, obj2));
+                        PUSH(mpvm::less(obj1, obj2));
+                        // _stack->push(mpvm::less(obj1, obj2));
                         break;
                     
                     case compare_op::GREATER:
-                        _stack->push(mpvm::greater(obj1, obj2));
+                        PUSH(mpvm::greater(obj1, obj2));
+                        // _stack->push(mpvm::greater(obj1, obj2));
                         break;
                     
                     case compare_op::EQUAL:
-                        _stack->push(mpvm::equal(obj1, obj2));
+                        PUSH(mpvm::equal(obj1, obj2));
+                        // _stack->push(mpvm::equal(obj1, obj2));
                         break;
 
                     case compare_op::NOT_EQUAL:
-                        _stack->push(mpvm::not_equal(obj1, obj2));
+                        PUSH(mpvm::not_equal(obj1, obj2));
+                        // _stack->push(mpvm::not_equal(obj1, obj2));
                         break;
                     case compare_op::GREATER_EQUAL:
-                        _stack->push(mpvm::geq(obj1, obj2));
+                        PUSH(mpvm::geq(obj1, obj2));
+                        // _stack->push(mpvm::geq(obj1, obj2));
                         break;
                     case compare_op::LESS_EQUAL:
-                        _stack->push(mpvm::leq(obj1, obj2));
+                        PUSH(mpvm::leq(obj1, obj2));
+                        // _stack->push(mpvm::leq(obj1, obj2));
                         break;
 
                     default:
-                        std::cerr << "unknown compare op: " << work_num << std::endl;
+                        std::cerr << "unknown compare op: " << op_arg << std::endl;
+                        
                         break;
                 }
 
 #ifdef DEBUG
-    std::cout << op_line << "\t\t\tcompare op: " << work_num << std::endl;
+    std::cout << op_line << "\t\t\tcompare op: " << op_arg << std::endl;
 #endif
 
                 break;
             
             case op_code::POP_JUMP_IF_FALSE:
-                obj = _stack->top(); _stack->pop();
+                obj = TOP();    POP();
+
+                // obj = _stack->top(); _stack->pop();
                 if (obj == FALSE_OBJECT)
-                    c_idx = work_num << 1;
+                    // c_idx = op_arg << 1;
+                    _frame->set_pc(op_arg << 1);
 
 #ifdef DEBUG
-    std::cout << op_line << "\t\t\tpop jump if false: " << *obj << std::endl;
+    std::cout << op_line << "\t\t\tpop jump if false: " << op_arg << std::endl;
 #endif
 
                 break;
 
             case op_code::POP_JUMP_IF_TRUE:
-                obj = _stack->top(); _stack->pop();
+                obj = TOP();    POP();
+
                 if (obj == TRUE_OBJECT)
-                    c_idx = work_num << 1;
+                    _frame->set_pc(op_arg << 1);
+
+                // obj = _stack->top(); _stack->pop();
+                // if (obj == TRUE_OBJECT)
+                //     c_idx = op_arg << 1;
 
 #ifdef DEBUG
-    std::cout << op_line << "\t\t\tpop jump if true: " << *obj << std::endl;
+    std::cout << op_line << "\t\t\tpop jump if true: " << op_arg << std::endl;
 #endif
 
                 break;
 
             case op_code::JUMP_FORWARD:
-
-                c_idx += work_num;
+                _frame->set_pc(_frame->get_pc() + op_arg);
+                // c_idx += op_arg;
 
 #ifdef DEBUG
-    std::cout << op_line << "\t\t\tjump forward: " << c_idx << std::endl;
+    std::cout << op_line << "\t\t\tjump forward: " << op_arg << std::endl;
 #endif
 
                 break;
 
             case op_code::JUMP_ABSOLUTE:
-
-                c_idx = work_num << 1;
+                _frame->set_pc(op_arg << 1);
+                // c_idx = op_arg << 1;
 
 #ifdef DEBUG
-    std::cout << op_line << "\t\t\tjump absolute: " << c_idx << std::endl;
+    std::cout << op_line << "\t\t\tjump absolute: " << op_arg << std::endl;
 #endif
 
                 break;
 
+            case op_code::MAKE_FUNCTION:
+                obj2 = TOP();    POP();
+                obj1 = TOP();    POP();
+
+                obj = new FunctionObject(obj1);
+                PUSH(obj);
+
+#ifdef DEBUG
+    std::cout << op_line <<  "\t\t\tmake function: " << op_arg << std::endl;
+#endif 
+                break;
+
             case op_code::CALL_FUNCTION:
             {
-                obj = _stack->top(); _stack->pop();
-                func = static_cast<String*>(_stack->top()); _stack->pop();
-
-                if (func->value() == "print") {
-                    std::cout << *obj << std::endl;
-                }
+                obj = TOP();    POP();
+                build_frame(obj);
 
 #ifdef DEBUG    
-    std::cout << op_line <<  "\t\t\tcall function: " << *func  << "(" << *obj << ")" << std::endl;
+    std::cout << op_line <<  "\t\t\tcall function: " << op_arg << std::endl;
 #endif
 
                 break;
@@ -194,38 +249,42 @@ void mpvm::Interpreter::run(mpvm::CodeObject* co) {
             case op_code::POP_TOP:
 
 #ifdef DEBUG
-    std::cout << "\t\t\tpop top" << std::endl;
+    std::cout << "\t\t\tpop top " << op_arg<< std::endl;
 #endif
                 
                 break;
 
             case op_code::RETURN_VALUE:
+                _ret_val = TOP();
+                
 
 #ifdef DEBUG
-    std::cout << "\t\t\treturn value" << std::endl;
+    std::cout << "\t\t\treturn value " << *_ret_val << std::endl;
 #endif
-
+                if (_frame->is_first_frame()) {
+                    return;
+                }
+                leave_frame();
                 break;
             
 
             default:
 
-                std::cerr << "unknown op code: " << op_code << std::endl;
+                std::cerr << "unknown op code: " << ope << std::endl;
                 break;
 
         }
 
-        if (op_code == op_code::RETURN_VALUE) {
-            break;
-        }
+
 #ifdef DEBUG
     op_line++;
 #endif 
 
     }
+}
 
-    delete _stack;
-    delete _names_hash;
-
-
+void mpvm::Interpreter::run(mpvm::CodeObject* co) {
+    _frame = new FrameObject(co);
+    eval_frame();
+    destroy_frame();
 }

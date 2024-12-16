@@ -5,13 +5,12 @@ set(MPVM_OBJECT_SRC
     tuple_object.cpp
     ellipsis_object.cpp
     code_object.cpp
+    function_object.cpp
     integer.cpp
     string.cpp
     constant.cpp
 )
 add_library(object STATIC ${MPVM_OBJECT_SRC}) 
-
-# add_subdirectory(klass)
 
 include_directories(${CMAKE_CURRENT_SOURCE_DIR})
 include_directories(${PROJECT_SOURCE_DIR}/utils)

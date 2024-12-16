@@ -7,6 +7,7 @@
 #include "integer.hpp"
 #include "none_object.hpp"
 #include "code_object.hpp"
+#include "function_object.hpp"
 
 /* Klass instance*/
 
@@ -23,6 +24,8 @@ mpvm::NoneKlass* mpvm::NONE_KLASS           = mpvm::NoneKlass::get_instance();
 mpvm::StringKlass* mpvm::STRING_KLASS       = mpvm::StringKlass::get_instance();
 
 mpvm::TupleKlass* mpvm::TUPLE_KLASS         = mpvm::TupleKlass::get_instance();
+
+mpvm::FunctionKlass* mpvm::FUNCTION_KLASS   = mpvm::FunctionKlass::get_instance();
 
 /* Object instance*/
 

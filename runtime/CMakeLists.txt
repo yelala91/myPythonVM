@@ -1,4 +1,5 @@
 set(RUNTIME_SRC
+    frame_object.cpp
     interpreter.cpp
     constant.cpp
 )

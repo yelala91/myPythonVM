@@ -34,7 +34,9 @@ namespace mpvm{
     extern CodeKlass* CODE_KLASS;
 
 
-    class Interpreter;
+    // class Interpreter;
+    class FrameObject;
+    class FunctionObject;
 
     class CodeObject : public Object {
 
@@ -50,7 +52,7 @@ namespace mpvm{
         Tuple*          _consts;
         Tuple*          _names;
         Tuple*          _varnames;
-        Tuple*          _freenames;
+        Tuple*          _freevars;
         Tuple*          _cellvars;
         String*         _filename;
         String*         _co_name;
@@ -73,7 +75,7 @@ namespace mpvm{
             Tuple*      consts, 
             Tuple*      names,
             Tuple*      varnames,
-            Tuple*      freenames,
+            Tuple*      freevars,
             Tuple*      cellvars,
             String*     filename,
             String*     co_name, 
@@ -91,7 +93,7 @@ namespace mpvm{
             _consts(consts),
             _names(names),
             _varnames(varnames),
-            _freenames(freenames),
+            _freevars(freevars),
             _cellvars(cellvars),
             _filename(filename),
             _co_name(co_name),
@@ -112,7 +114,7 @@ namespace mpvm{
             Tuple*      consts, 
             Tuple*      names,
             Tuple*      varnames,
-            Tuple*      freenames,
+            Tuple*      freevars,
             Tuple*      cellvars,
             String*     filename,
             String*     co_name, 
@@ -120,8 +122,9 @@ namespace mpvm{
             String*     notable
         );
 
-        friend class Interpreter;
+        friend class FrameObject;
         friend class CodeKlass;
+        friend class FunctionObject;
 
     };
 

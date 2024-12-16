@@ -12,7 +12,7 @@ void mpvm::CodeObject::set(
     Tuple*      consts, 
     Tuple*      names,
     Tuple*      varnames,
-    Tuple*      freenames,
+    Tuple*      freevars,
     Tuple*      cellvars,
     String*     filename,
     String*     co_name, 
@@ -29,7 +29,7 @@ void mpvm::CodeObject::set(
     _consts = consts;
     _names = names;
     _varnames = varnames;
-    _freenames = freenames;
+    _freevars = freevars;
     _cellvars = cellvars;
     _filename = filename;
     _co_name = co_name;
@@ -53,7 +53,7 @@ void mpvm::CodeKlass::_display(std::ostream& os, Object* obj) const {
     os << "consts: "            << *code_obj->_consts << std::endl;
     os << "names: "             << *code_obj->_names << std::endl;
     os << "varnames: "          << *code_obj->_varnames << std::endl;
-    os << "freenames: "         << *code_obj->_freenames << std::endl;
+    os << "freevars: "         << *code_obj->_freevars << std::endl;
     os << "cellvars: "          << *code_obj->_cellvars << std::endl;
     os << "filename: "          << *code_obj->_filename << std::endl;
     os << "co_name: "           << *code_obj->_co_name << std::endl;
